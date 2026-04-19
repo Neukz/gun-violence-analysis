@@ -51,21 +51,34 @@ def parse_column(df, col, attrname, stringed=False):
         if pd.isna(cell) or cell == '':
             continue
 
-        for part in str(cell).split('||'):
-            if '::' not in part:
+        text = str(cell)
+        seg_sep = '||' if '||' in text else '|'
+        for part in text.split(seg_sep):
+            if '::' in part:
+                position, value = part.split('::', 1)
+            elif ':' in part:
+                position, value = part.split(':', 1)
+            else:
                 continue
-            position, value = part.split('::')
+            try:
+                position = int(position)
+            except ValueError:
+                continue
             if stringed:
                 rows.append({
                     'original_index': idx,
-                    'position': int(position),
+                    'position': position,
                     attrname: str(value)
                 })
             else:
+                try:
+                    value = int(value)
+                except ValueError:
+                    continue
                 rows.append({
                     'original_index': idx,
-                    'position': int(position),
-                    attrname: int(value)
+                    'position': position,
+                    attrname: value
                 })
 
     return pd.DataFrame(rows)
