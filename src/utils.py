@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-def plot_barplot(col):
+def plot_barplot(col: pd.Series) -> None:
     counts = col.value_counts()
 
     _, ax = plt.subplots(figsize=(10, 5))
@@ -17,7 +17,7 @@ def plot_barplot(col):
     plt.show()
 
 
-def linreg(x_col, y_col):
+def linreg(x_col: pd.Series, y_col: pd.Series) -> None:
     mask = x_col.notna() & y_col.notna()
     x = x_col[mask]
     y = y_col[mask]
@@ -44,7 +44,9 @@ def linreg(x_col, y_col):
     print(f"Pearson r : {corr:.4f}")
 
 
-def parse_column(df, col, attrname, stringed=False):
+def parse_column(
+    df: pd.DataFrame, col: str, attrname: str, stringed: bool = False
+) -> pd.DataFrame:
     rows = []
     for idx, row in df.iterrows():
         cell = row[col]
@@ -80,7 +82,7 @@ def parse_column(df, col, attrname, stringed=False):
     return pd.DataFrame(rows)
 
 
-def parse2(df, col):
+def parse2(df: pd.DataFrame, col: str) -> pd.DataFrame:
     rows = []
     for idx, row in df.iterrows():
         cell = row[col]
@@ -93,5 +95,5 @@ def parse2(df, col):
     return pd.DataFrame(rows)
 
 
-def index_preprocessing(df):
+def index_preprocessing(df: pd.DataFrame) -> None:
     df["id"] = df["original_index"].astype(str) + "p" + df["position"].astype(str)
